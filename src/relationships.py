@@ -1,8 +1,8 @@
-from utils import create_db_connection
+import db
 
 
 def create_relationships():
-    with create_db_connection() as driver:
+    with db.connect() as driver:
         queries = [
             "MATCH (org:Orgao), (licitacao:Licitacao {orgId:org.id}) CREATE (org)-[:LICITOU]->(licitacao)",
             "MATCH (o:Orgao), (s:Servidor { orgExercicioId: o.id }) CREATE (s)-[:TRABALHA]->(o)",

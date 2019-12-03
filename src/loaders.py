@@ -1,4 +1,5 @@
 import pandas as pd
+import mmh3
 
 from utils import (
     column_to_datetime,
@@ -33,30 +34,30 @@ def load_empresas():
 
 
 def load_licitacoes():
-    licitacoes_df = load_dataset("Licitacao")
-    licitacoes_df.columns = map(to_camel, licitacoes_df.columns)
-    licitacoes_df = column_to_float(licitacoes_df, "valorLicitação")
-    licitacoes_df = column_to_datetime(licitacoes_df, "dataResultadoCompra")
-    licitacoes_df = column_to_datetime(licitacoes_df, "dataAbertura")
-    
-    return licitacoes_df
+    df = load_dataset("Licitacao")
+    df.columns = map(to_camel, df.columns)
+    df = column_to_float(df, "valorLicitação")
+    df = column_to_datetime(df, "dataResultadoCompra")
+    df = column_to_datetime(df, "dataAbertura")
+    df["id"] = mmh3.hash(df["númeroLicitação"] + df["númeroProcesso"] + df["códigoUg"])
 
-
-load_licitacoes()
+    return df
 
 
 def load_contratos():
-    contratos_df = load_dataset("Compras")
-    contratos_df.columns = map(to_camel, contratos_df.columns)
+    df = load_dataset("Compras")
+    df.columns = map(to_camel, df.columns)
 
-    contratos_df = column_to_float(contratos_df, "valorInicialCompra")
-    contratos_df = column_to_float(contratos_df, "valorFinalCompra")
-    contratos_df = column_to_datetime(contratos_df, "dataInícioVigência")
-    contratos_df = column_to_datetime(contratos_df, "dataFimVigência")
-    contratos_df = column_to_datetime(contratos_df, "dataAssinaturaContrato")
-    contratos_df = column_to_datetime(contratos_df, "dataPublicaçãoDou")
+    df = column_to_float(df, "valorInicialCompra")
+    df = column_to_float(df, "valorFinalCompra")
+    df = column_to_datetime(df, "dataInícioVigência")
+    df = column_to_datetime(df, "dataFimVigência")
+    df = column_to_datetime(df, "dataAssinaturaContrato")
+    df = column_to_datetime(df, "dataPublicaçãoDou")
 
-    return contratos_df
+    df["id"] = mmh3.hash(df["númeroDoContrato"] + df["códigoUg"] + df["objeto"])
+
+    return df
 
 
 def load_items_licitacao():
