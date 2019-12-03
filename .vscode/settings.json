@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "/Users/mgambati/.pyenv/versions/miniconda3-4.3.30/bin/python",
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black"
+}
