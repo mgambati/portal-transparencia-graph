@@ -4,7 +4,7 @@ servidor = """
         cpf: $cpf,
         cargo: $descricao_cargo,
         uf: $uf_exercicio,
-        vinculo: $situacao_vinculo
+        vinculo: $situacao_vinculo,
         orgId: $cod_org_exercicio,
         uorgId: $cod_uorg_exercicio
     })
