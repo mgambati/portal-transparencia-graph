@@ -83,7 +83,8 @@ itens_licitacao = """
         cnpjVencedor: $cnpjVencedor,
         descricao: $descrição,
         quantidade: $quantidadeItem,
-        valor: $valorItem
+        valor: $valorItem,
+        licitacaoId: $licitacaoId
     })
 """
 
@@ -94,7 +95,8 @@ participante_licitacao = """
         cnpj: $cnpjParticipante,
         venceu: $flagVencedor,
         orgId: $códigoÓrgão,
-        ugId: $códigoUg
+        ugId: $códigoUg,
+        licitacaoId: $licitacaoId
     })
 """
 

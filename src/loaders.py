@@ -56,8 +56,11 @@ def load_licitacoes():
     df = column_to_float(df, "valorLicitação")
     df = column_to_datetime(df, "dataResultadoCompra")
     df = column_to_datetime(df, "dataAbertura")
-    df["id"] = df["númeroLicitação"] + df["númeroProcesso"] + df["códigoUg"]
-    df["id"] = df["id"].map(mmh3.hash)
+
+    df["id"] = df.apply(
+        lambda x: mmh3.hash(x["númeroLicitação"] + x["númeroProcesso"] + x["códigoUg"]),
+        axis=1,
+    )
 
     return df
 
@@ -74,20 +77,25 @@ def load_contratos():
     df = column_to_datetime(df, "dataAssinaturaContrato")
     df = column_to_datetime(df, "dataPublicaçãoDou")
 
-    df["id"] = df["númeroDoContrato"] + df["códigoUg"] + df["objeto"]
-    df["id"] = df["id"].map(mmh3.hash)
+    df["id"] = df.apply(
+        lambda x: mmh3.hash(x["númeroDoContrato"] + x["códigoUg"] + x["objeto"]), axis=1
+    )
 
     return df
 
 
 def load_items_licitacao():
-    items_licitacao_df = load_dataset("ItemLicitacao")
-    items_licitacao_df.columns = map(to_camel, items_licitacao_df.columns)
+    df = load_dataset("ItemLicitacao")
+    df.columns = map(to_camel, df.columns)
+    df = column_to_float(df, "valorItem")
+    df = column_to_int(df, "quantidadeItem")
+    df["licitacaoId"] = df.apply(
+        lambda x: mmh3.hash(x["númeroLicitação"] + x["númeroProcesso"] + x["códigoUg"]),
+        axis=1,
+    )
 
-    items_licitacao_df = column_to_float(items_licitacao_df, "valorItem")
-    items_licitacao_df = column_to_int(items_licitacao_df, "quantidadeItem")
+    return df
 
-    return items_licitacao_df
 
 
 def load_termos_aditivos():
@@ -99,14 +107,14 @@ def load_termos_aditivos():
 
 
 def load_participantes_licitacao():
-    participantes_licitacao_df = load_dataset("ParticipantesLicitacao")
-    participantes_licitacao_df.columns = map(
-        to_camel, participantes_licitacao_df.columns
+    df = load_dataset("ParticipantesLicitacao")
+    df.columns = map(to_camel, df.columns)
+
+    df["flagVencedor"] = df["flagVencedor"].map({"NÃO": False, "SIM": True})
+
+    df["licitacaoId"] = df.apply(
+        lambda x: mmh3.hash(x["númeroLicitação"] + x["númeroProcesso"] + x["códigoUg"]),
+        axis=1,
     )
 
-    participantes_licitacao_df["flagVencedor"] = participantes_licitacao_df[
-        "flagVencedor"
-    ].map({"NÃO": False, "SIM": True})
-
-    return participantes_licitacao_df
-
+    return df
