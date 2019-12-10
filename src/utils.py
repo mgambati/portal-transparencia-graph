@@ -24,6 +24,16 @@ def to_neotime_date(value):
 def load_dataset(name, load_subset=False, subset_amount=1000):
     file_path = Path("./data/201908_" + name + ".csv").resolve()
 
+    if load_subset is False:
+        df = pd.read_csv(
+            file_path,
+            sep=";",
+            encoding="latin1",
+            dtype=str
+        )
+        df.columns = df.columns.str.lower()
+        return df
+
     number_of_entries = sum(1 for line in open(file_path, encoding="latin-1")) - 1
 
     skip = sorted(

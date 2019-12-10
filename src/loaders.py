@@ -29,8 +29,9 @@ def load_orgaos():
 
 
 def load_empresas():
-    empresas_df = load_dataset("CNPJ")
-    return empresas_df
+    df = load_dataset("CNPJ")
+
+    return df
 
 
 def load_licitacoes():
@@ -39,11 +40,13 @@ def load_licitacoes():
     df = column_to_float(df, "valorLicitação")
     df = column_to_datetime(df, "dataResultadoCompra")
     df = column_to_datetime(df, "dataAbertura")
-    df["id"] = mmh3.hash(df["númeroLicitação"] + df["númeroProcesso"] + df["códigoUg"])
+    df["id"] = df["númeroLicitação"] + df["númeroProcesso"] + df["códigoUg"]
+    df["id"] = df["id"].map(mmh3.hash)
 
     return df
 
 
+# cnpjContratado pode ser um cnpj ou cpf
 def load_contratos():
     df = load_dataset("Compras")
     df.columns = map(to_camel, df.columns)
@@ -55,7 +58,8 @@ def load_contratos():
     df = column_to_datetime(df, "dataAssinaturaContrato")
     df = column_to_datetime(df, "dataPublicaçãoDou")
 
-    df["id"] = mmh3.hash(df["númeroDoContrato"] + df["códigoUg"] + df["objeto"])
+    df["id"] = df["númeroDoContrato"] + df["códigoUg"] + df["objeto"]
+    df["id"] = df["id"].map(mmh3.hash)
 
     return df
 
@@ -71,12 +75,14 @@ def load_items_licitacao():
 
 
 def load_termos_aditivos():
-    termos_aditivos_df = load_dataset("TermoAditivo")
-    termos_aditivos_df.columns = map(to_camel, termos_aditivos_df.columns)
-    termos_aditivos_df = column_to_datetime(termos_aditivos_df, "dataPublicação")
+    df = load_dataset("TermoAditivo")
+    df.columns = map(to_camel, df.columns)
+    df = column_to_datetime(df, "dataPublicação")
 
-    return termos_aditivos_df
+    print(df.sample(10))
+    return df
 
+load_termos_aditivos()
 
 def load_participantes_licitacao():
     participantes_licitacao_df = load_dataset("ParticipantesLicitacao")

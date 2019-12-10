@@ -1,8 +1,9 @@
-from db import connect
+
+import db
 
 
 def create_indexes():
-    with connect() as driver:
+    with db.connect() as driver:
         queries = [
             "CREATE INDEX ON :Servidor(cpf)",
             "CREATE INDEX ON :Servidor(nome)",

@@ -51,53 +51,49 @@ contrato = """
         fundamentoLegal: $fundamentoLegal,
         modalidadeCompra: $modalidadeCompra,
         situacaoContrato: $situaçãoContrato,
-        orgSuperiorId: $códigoÓrgãoSuperior,
-        orgId: $códigoÓrgão,
-        ugId: $códigoUg,
-        dataAssinaturaContrato: $dataAssinaturaContrato,
-        dataPublicacaoDou: $dataPublicaçãoDou,
-        dataInicioVigencia: $dataInícioVigência,
-        dataFimVigencia: $dataFimVigência,
+        assinadoEm: $dataAssinaturaContrato,
+        vigenciaIniciaEm: $dataInícioVigência,
+        vigenciaTerminaEm: $dataFimVigência,
         cnpjContratado: $cnpjContratado,
-        valorInicialCompra: $valorInicialCompra,
-        valorFinalCompra: $valorFinalCompra
+        valorInicial: $valorInicialCompra,
+        valorFinal: $valorFinalCompra,
+        orgId: $códigoÓrgão,
+        ugId: $códigoUg
     })
 """
 
 itens_licitacao = """
     CREATE (n:ItemLicitacao {
-        numeroLicitacao: $númeroLicitação,
-        numeroProcesso: $númeroProcesso,
+        licitacao: $númeroLicitação,
+        processo: $númeroProcesso,
         orgId: $códigoÓrgão,
         ugId: $códigoUg,
         cnpjVencedor: $cnpjVencedor,
         descricao: $descrição,
-        quantidadeItem: $quantidadeItem,
-        valorItem: $valorItem
+        quantidade: $quantidadeItem,
+        valor: $valorItem
     })
 """
 
 participante_licitacao = """
     CREATE (n:ParticipanteLicitacao {
-        numeroLicitacao: $númeroLicitação,
-        numeroProcesso: $númeroProcesso,
+        licitacao: $númeroLicitação,
+        processo: $númeroProcesso,
+        cnpj: $cnpjParticipante,
+        venceu: $flagVencedor,
         orgId: $códigoÓrgão,
-        ugId: $códigoUg,
-        codigoItemCompra: $códigoItemCompra,
-        cnpjParticipante: $cnpjParticipante,
-        flagVencedor: $flagVencedor
+        ugId: $códigoUg
     })
 """
 
 termo_aditivo = """
     CREATE (n:TermoAditivo {
-        numeroContrato: $numeroContrato,
-        orgSuperiorId: $códigoÓrgãoSuperior,
+        contrato: $númeroContrato,
+        numero: $númeroTermoAditivo,
+        publicadoEm: $dataPublicação,
+        objeto: $objeto,
         orgId: $códigoÓrgão,
-        ugId: $códigoUg,
-        numeroTermoAditivo: $númeroTermoAditivo,
-        dataPublicacao: $dataPublicação,
-        objeto: $objeto
+        ugId: $códigoUg
     })
 """
 

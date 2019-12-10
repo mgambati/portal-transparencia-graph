@@ -1,14 +1,6 @@
-from insert_data import (
-    insert_contratos,
-    insert_empresas,
-    insert_items_licitacao,
-    insert_licitacoes,
-    insert_orgaos,
-    insert_participantes_licitacao,
-    insert_servidores,
-    insert_socios,
-)
-from indexes import create_indexes
+from insert_data import *
+from queries.indexes import create_indexes
+from queries.relationships import create_relationships
 
 def main():
     insert_servidores()
@@ -19,6 +11,10 @@ def main():
     insert_items_licitacao()
     insert_participantes_licitacao()
     insert_contratos()
+    insert_termos_aditivos()
     create_indexes()
+    create_relationships()
 
-main()
+
+if __name__ == '__main__':
+    main()
