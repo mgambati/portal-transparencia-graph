@@ -12,7 +12,6 @@ def main():
     insert_participantes_licitacao()
     insert_contratos()
     insert_termos_aditivos()
-    create_indexes()
     create_relationships()
 
 
