@@ -1,5 +1,6 @@
 servidor = """
     CREATE (n:Servidor {
+        id: $id,
         nome: $nome,
         cpf: $cpf,
         cargo: $descricao_cargo,
@@ -18,6 +19,17 @@ empresa = """
         tipo: $tipo_pessoa
     })
 """
+
+socio = """
+    CREATE (n:Socio {
+        cnpj: $cnpj,
+        nome: $nome,
+        cpfCnpj: $cpfCnpj,
+        tipo: $tipo,
+        servidorId: $servidorId
+    })
+"""
+
 
 orgao = """
     CREATE (n:Orgao {
@@ -97,11 +109,3 @@ termo_aditivo = """
     })
 """
 
-socio = """
-    CREATE (n:Socio {
-        cnpj: $cnpj,
-        nome: $nome,
-        cpfCnpj: $cpfCnpj,
-        tipo: $tipo
-    })
-"""

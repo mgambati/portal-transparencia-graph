@@ -5,6 +5,7 @@ import re
 import neotime
 import random
 from tqdm import tqdm
+import mmh3
 
 # pd.set_option("display.expand_frame_repr", False)
 
@@ -25,12 +26,7 @@ def load_dataset(name, load_subset=False, subset_amount=1000):
     file_path = Path("./data/201908_" + name + ".csv").resolve()
 
     if load_subset is False:
-        df = pd.read_csv(
-            file_path,
-            sep=";",
-            encoding="latin1",
-            dtype=str
-        )
+        df = pd.read_csv(file_path, sep=";", encoding="latin1", dtype=str)
         df.columns = df.columns.str.lower()
         return df
 
@@ -74,3 +70,17 @@ def column_to_datetime(original_df, column):
     df[column] = pd.to_datetime(df[column], dayfirst=True)
 
     return df
+
+
+def remove_cnpj_formating(value):
+    if value.startswith("***.") is True:
+        return value
+
+    return re.sub(r"\.|/|-", "", value)
+
+
+def hash_nome_cpf(nome, cpf):
+    if cpf.startswith("***.") is False:
+        return None
+
+    return mmh3.hash(nome + cpf)

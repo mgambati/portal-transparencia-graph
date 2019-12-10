@@ -7,15 +7,16 @@ from utils import (
     column_to_int,
     load_dataset,
     to_camel,
+    remove_cnpj_formating,
+    hash_nome_cpf,
 )
 
 
 def load_servidores():
-    servidores_df = load_dataset("Cadastro")
+    df = load_dataset("Cadastro")
+    df["id"] = df.apply(lambda x: hash_nome_cpf(x["nome"], x["cpf"]), axis=1)
 
-    servidores_df["nome_cpf"] = servidores_df["nome"] + servidores_df["cpf"]
-
-    return servidores_df
+    return df
 
 
 def load_orgaos():
@@ -30,6 +31,21 @@ def load_orgaos():
 
 def load_empresas():
     df = load_dataset("CNPJ")
+
+    return df
+
+
+def load_socios():
+    df = load_dataset("Socios")
+    df.columns = map(to_camel, df.columns)
+    df = df.rename(columns={"cpf-cnpj": "cpfCnpj"})
+    df["nome"] = df["nome"].astype(str)
+    df["cpfCnpj"] = df["cpfCnpj"].astype(str)
+    df["cpfCnpj"] = df["cpfCnpj"].map(remove_cnpj_formating)
+
+    df["servidorId"] = df.apply(
+        lambda x: hash_nome_cpf(x["nome"], x["cpfCnpj"]), axis=1
+    )
 
     return df
 
@@ -79,10 +95,8 @@ def load_termos_aditivos():
     df.columns = map(to_camel, df.columns)
     df = column_to_datetime(df, "dataPublicação")
 
-    print(df.sample(10))
     return df
 
-load_termos_aditivos()
 
 def load_participantes_licitacao():
     participantes_licitacao_df = load_dataset("ParticipantesLicitacao")
@@ -96,10 +110,3 @@ def load_participantes_licitacao():
 
     return participantes_licitacao_df
 
-
-def load_socios():
-    socios_df = load_dataset("Socios")
-    socios_df.columns = map(to_camel, socios_df.columns)
-    socios_df = socios_df.rename(columns={"cpf-cnpj": "cpfCnpj"})
-
-    return socios_df

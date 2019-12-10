@@ -10,6 +10,9 @@ def create_relationships():
             "MATCH (c:Contrato), (e:Empresa { cnpj: c.cnpjContratado }) CREATE (e)-[:CONTRATADO]->(c)",
             "MATCH (l:Licitacao), (il:ItemLicitacao { licitacao: l.licitacao, processo: l.processo }) CREATE (l)-[:POSSUI]->(il)",
             "MATCH (c:Contrato), (ta:TermoAditivo { contrato: c.numero }) CREATE (c)-[:PUBLICOU]->(ta)",
+            "MATCH (e:Empresa), (s:Socio { cpfCnpj: e.cnpj }), (ex:Empresa { cnpj: s.cnpj }) CREATE (e)-[:SOCIO]->(ex)",
+            "MATCH (s:Socio), (sv:Servidor { id: s.servidorId }), (e:Empresa { cnpj: s.cnpj }) CREATE (sv)-[:SOCIO]->(e)",
+            "MATCH (pl:ParticipanteLicitacao), (l:Licitacao { licitacao: pl.licitacao, processo: pl.processo }), (e:Empresa { cnpj: pl.cnpj }) CREATE (e)-[:PARTICIPOU { venceu: pl.venceu }]->(l)",
         ]
 
         with driver.session() as session:
