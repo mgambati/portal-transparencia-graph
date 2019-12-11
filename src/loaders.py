@@ -62,10 +62,9 @@ def load_licitacoes():
         axis=1,
     )
 
-    return df
+    return df.drop_duplicates(subset='id', keep='last')
 
 
-# cnpjContratado pode ser um cnpj ou cpf
 def load_contratos():
     df = load_dataset("Compras")
     df.columns = map(to_camel, df.columns)
@@ -81,7 +80,7 @@ def load_contratos():
         lambda x: mmh3.hash(x["númeroDoContrato"] + x["códigoUg"] + x["objeto"]), axis=1
     )
 
-    return df
+    return df.drop_duplicates(subset='id', keep='last')
 
 
 def load_items_licitacao():
