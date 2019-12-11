@@ -50,7 +50,6 @@ licitacao = """
         resultadoPublicadoEm: $dataResultadoCompra,
         abertoEm: $dataAbertura,
         valor: $valorLicitação,
-        orgSuperiorId: $códigoÓrgãoSuperior,
         orgId: $códigoÓrgão,
         ugId: $códigoUg
     })
@@ -58,6 +57,7 @@ licitacao = """
 
 contrato = """
     CREATE (n:Contrato {
+        id: $id,
         numero: $númeroDoContrato,
         objeto: $objeto,
         fundamentoLegal: $fundamentoLegal,
@@ -107,7 +107,8 @@ termo_aditivo = """
         publicadoEm: $dataPublicação,
         objeto: $objeto,
         orgId: $códigoÓrgão,
-        ugId: $códigoUg
+        ugId: $códigoUg,
+        contratoId: $contratoId
     })
 """
 

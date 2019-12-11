@@ -3,6 +3,7 @@ from queries.indexes import create_indexes
 from queries.relationships import create_relationships
 
 def main():
+    create_indexes()
     insert_servidores()
     insert_empresas()
     insert_orgaos()
