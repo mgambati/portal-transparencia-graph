@@ -19,16 +19,6 @@ def load_servidores():
     return df
 
 
-def load_orgaos():
-    servidores_df = load_servidores()
-    columns = ["cod_org_exercicio", "org_exercicio", "cod_orgsup_exercicio"]
-    df_orgaos = (
-        servidores_df.groupby(columns).size().reset_index(name="total_funcionarios")
-    )
-
-    return df_orgaos
-
-
 def load_empresas():
     df = load_dataset("CNPJ")
 
@@ -96,11 +86,14 @@ def load_items_licitacao():
     return df
 
 
-
 def load_termos_aditivos():
     df = load_dataset("TermoAditivo")
     df.columns = map(to_camel, df.columns)
     df = column_to_datetime(df, "dataPublicação")
+
+    df["contratoId"] = df.apply(
+        lambda x: mmh3.hash(x["númeroContrato"] + x["códigoUg"] + x["objeto"]), axis=1
+    )
 
     return df
 
@@ -117,3 +110,46 @@ def load_participantes_licitacao():
     )
 
     return df
+
+
+def get_orgs_from(df, columns):
+    grouped = df.copy()
+    grouped = (
+        grouped.groupby(list(columns.keys())).size().reset_index(name="total_funcionarios")
+    )
+    return grouped.rename(columns=columns)
+
+
+def load_orgaos():
+    sv_df = load_servidores()
+    ct_df = load_contratos()
+    lc_df = load_licitacoes()
+
+    dfs = [
+        get_orgs_from(
+            sv_df,
+            {
+                "cod_org_exercicio": "id",
+                "org_exercicio": "nome",
+                "cod_orgsup_exercicio": "orgSuperiorId",
+            },
+        ),
+        get_orgs_from(
+            ct_df,
+            {
+                "códigoÓrgão": "id",
+                "nomeÓrgão": "nome",
+                "códigoÓrgãoSuperior": "orgSuperiorId",
+            },
+        ),
+        get_orgs_from(
+            lc_df,
+            {
+                "códigoÓrgão": "id",
+                "nomeÓrgão": "nome",
+                "códigoÓrgãoSuperior": "orgSuperiorId",
+            },
+        ),
+    ]
+
+    return pd.concat(dfs).drop_duplicates(subset='id', keep='last')
