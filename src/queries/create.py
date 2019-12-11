@@ -33,9 +33,9 @@ socio = """
 
 orgao = """
     CREATE (n:Orgao {
-        id: $cod_org_exercicio,
-        nome: $org_exercicio,
-        orgSuperiorId: $cod_orgsup_exercicio
+        id: $id,
+        nome: $nome,
+        orgSuperiorId: $orgSuperiorId
     })
 """
 

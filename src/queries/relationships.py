@@ -8,6 +8,13 @@ queries = [
             (licitacao:Licitacao { orgId:org.id })
         CREATE (org)-[:REALIZOU]->(licitacao)
     """,
+    # Orgão possui orgão superior
+    """
+        MATCH
+            (o:Orgao),
+            (os:Licitacao { id: o.orgSuperiorId })
+        CREATE (o)-[:PERTENCE]->(os)
+    """,
     # Orgão criou contrato
     """
         MATCH
